@@ -1,13 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
+import PasswordList from './PasswordList';
 import "./AddTitlePassword.css";
 
 const AddTitlePassword = () => {
+    const [entries, setEntries] = useState([]);
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const title = event.target.title.value;
         const password = event.target.password.value;
-        console.log("Title:", title);
-        console.log("Password:", password);
+        
+        const newEntry = { title, password };
+        setEntries([...entries, newEntry]);
+        event.target.reset();
     }
 
     return (
@@ -23,6 +28,7 @@ const AddTitlePassword = () => {
                     <button type="submit">Add</button> 
                 </form>
             </div>
+            <PasswordList entries={entries} />
         </>
     );
 };
