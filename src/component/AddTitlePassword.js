@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import PasswordList from './PasswordList';
 import './AddTitlePassword.css';
 
-const AddTitlePassword = () => {
+const AddTitlePassword = ({ setTotalCount }) => {
     const [entries, setEntries] = useState([]);
     const [title, setTitle] = useState('');
     const [password, setPassword] = useState('');
     const [editIndex, setEditIndex] = useState(null);
 
+    // Load saved entries from localStorage when the component mounts
     useEffect(() => {
         const stored = localStorage.getItem('passwords');
         if (stored) {
@@ -15,9 +16,13 @@ const AddTitlePassword = () => {
         }
     }, []);
 
+    // Update localStorage and set the password count whenever entries change
     useEffect(() => {
-        localStorage.setItem('passwords', JSON.stringify(entries));
-    }, [entries]);
+        if (entries.length > 0) {
+            localStorage.setItem('passwords', JSON.stringify(entries));
+            setTotalCount(entries.length);
+        }
+    }, [entries, setTotalCount]); 
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -26,12 +31,11 @@ const AddTitlePassword = () => {
             const updatedEntries = [...entries];
             updatedEntries[editIndex] = { title, password };
             setEntries(updatedEntries);
-            setEditIndex(null);
+            setEditIndex(null); 
         } else {
             const newEntry = { title, password };
             setEntries((prev) => [...prev, newEntry]);
         }
-
         setTitle('');
         setPassword('');
     };
@@ -65,8 +69,6 @@ const AddTitlePassword = () => {
                     <button type="submit">{editIndex !== null ? 'Update' : 'Add'}</button>
                 </form>
             </div>
-
-            {/* Now only passing entries and setEntries */}
             <PasswordList 
                 entries={entries} 
                 setEntries={setEntries}
