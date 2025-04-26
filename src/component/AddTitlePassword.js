@@ -3,33 +3,37 @@ import PasswordList from './PasswordList';
 import './AddTitlePassword.css';
 
 const AddTitlePassword = () => {
-    const [entries, setEntries] = useState([]); // Initialize as an empty array
+    const [entries, setEntries] = useState([]);
+    const [title, setTitle] = useState('');
+    const [password, setPassword] = useState('');
+    const [editIndex, setEditIndex] = useState(null);
 
-    // Load data from localStorage
     useEffect(() => {
         const stored = localStorage.getItem('passwords');
         if (stored) {
             setEntries(JSON.parse(stored));
         }
-    }, []);  // Run once on component mount
+    }, []);
 
-    // Save data to localStorage whenever 'entries' changes
     useEffect(() => {
-        if (entries.length > 0) { // Save only when entries exist
-            localStorage.setItem('passwords', JSON.stringify(entries));
-        }
+        localStorage.setItem('passwords', JSON.stringify(entries));
     }, [entries]);
 
-    // Handle form submission
     const handleSubmit = (event) => {
         event.preventDefault();
-        const title = event.target.title.value;
-        const password = event.target.password.value;
 
-        const newEntry = { title, password };
-        setEntries((prev) => [...prev, newEntry]);
+        if (editIndex !== null) {
+            const updatedEntries = [...entries];
+            updatedEntries[editIndex] = { title, password };
+            setEntries(updatedEntries);
+            setEditIndex(null);
+        } else {
+            const newEntry = { title, password };
+            setEntries((prev) => [...prev, newEntry]);
+        }
 
-        event.target.reset();
+        setTitle('');
+        setPassword('');
     };
 
     return (
@@ -37,15 +41,39 @@ const AddTitlePassword = () => {
             <div className="field-group">
                 <form onSubmit={handleSubmit}>
                     <label htmlFor="title">Title:</label>
-                    <input id="title" name="title" type="text" placeholder="Enter title" required />
+                    <input
+                        id="title"
+                        name="title"
+                        type="text"
+                        placeholder="Enter title"
+                        required
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                    />
                     <br />
                     <label htmlFor="password">Password:</label>
-                    <input id="password" name="password" type="password" placeholder="Enter password" required />
+                    <input
+                        id="password"
+                        name="password"
+                        type="password"
+                        placeholder="Enter password"
+                        required
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
                     <br />
-                    <button type="submit">Add</button>
+                    <button type="submit">{editIndex !== null ? 'Update' : 'Add'}</button>
                 </form>
             </div>
-            <PasswordList entries={entries} />
+
+            {/* Now only passing entries and setEntries */}
+            <PasswordList 
+                entries={entries} 
+                setEntries={setEntries}
+                setTitle={setTitle}
+                setPassword={setPassword}
+                setEditIndex={setEditIndex}
+            />
         </>
     );
 };
