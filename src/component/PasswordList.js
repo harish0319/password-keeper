@@ -1,4 +1,5 @@
 import React from "react";
+import "./PasswordList.css";
 
 const PasswordList = ({ entries }) => {
     return (
