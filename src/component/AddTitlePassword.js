@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import PasswordList from "./PasswordList";
 import "./AddTitlePassword.css";
+import React, { useState, useEffect } from "react";
+import PasswordList from "./PasswordList";
+import "./AddTitlePassword.css";
 
 const AddTitlePassword = ({ setTotalCount, searchQuery }) => {
   const [entries, setEntries] = useState(() => {

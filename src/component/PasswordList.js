@@ -22,21 +22,23 @@ const PasswordList = ({ entries, setEntries, setTitle, setPassword, setEditIndex
     return (
         <div className="all-passwords">
             <h2>All Passwords</h2>
-            {entries.length === 0 ? (
-                <p>No passwords saved yet.</p>
-            ) : (
-                <ul>
-                    {entries.map((entry, index) => (
-                        <li key={index}>
-                            <strong>{entry.title}:</strong> {entry.password}
-                            <ActionButton
-                                onEdit={() => handleEdit(index)}
-                                onDelete={() => handleDelete(index)}
-                            />
-                        </li>
-                    ))}
-                </ul>
-            )}
+            <div className="password-list-scroll">
+                {entries.length === 0 ? (
+                    <p>No passwords saved yet.</p>
+                ) : (
+                    <ul>
+                        {entries.map((entry, index) => (
+                            <li key={index}>
+                                <strong>{entry.title}:</strong> {entry.password}
+                                <ActionButton
+                                    onEdit={() => handleEdit(index)}
+                                    onDelete={() => handleDelete(index)}
+                                />
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
         </div>
     );
 };
