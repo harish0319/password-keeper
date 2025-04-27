@@ -3,9 +3,9 @@ import AddDetails from './component/AddDetails';
 
 function App() {
   return (
-    <div>
+    <>
         <AddDetails />
-    </div>
+    </>
   );
 }
 

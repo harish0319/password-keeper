@@ -5,3 +5,12 @@
     justify-content: center;
     color: rgb(0, 0, 0);
   }
+
+  input[type="text"] {
+    margin: 10px 0;
+    padding: 8px;
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
