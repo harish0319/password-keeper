@@ -59,7 +59,7 @@ const AddTitlePassword = ({ setTotalCount, searchQuery }) => {
   }, [filteredEntries, setTotalCount]);
 
   return (
-    <>
+    <div className="container" >
       <div className="field-group">
       {warning && <div style={{ color: 'red', marginBottom: '10px', textAlign: 'center' }}>{warning}</div>}
         <form onSubmit={handleSubmit}>
@@ -96,7 +96,7 @@ const AddTitlePassword = ({ setTotalCount, searchQuery }) => {
         setPassword={setPassword}
         setEditIndex={setEditIndex}
       />
-    </>
+    </div>
   );
 };
 

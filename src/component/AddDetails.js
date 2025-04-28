@@ -10,11 +10,7 @@ const AddDetails = () => {
     <>
       <div>
         <h2 className="style">Password Keeper</h2>
-        
-        {/* Total Passwords Count */}
-        <p>Total Passwords: {totalCount}</p>
-
-        {/* Search Box */}
+        <p><bold>Total Passwords: {totalCount}</bold></p>
         <div className="search-box">
           <input
             id="search"
@@ -26,7 +22,6 @@ const AddDetails = () => {
           />
         </div>
 
-        {/* Pass data to AddTitlePassword */}
         <AddTitlePassword 
           setTotalCount={setTotalCount} 
           searchQuery={searchQuery}
