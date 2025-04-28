@@ -1,54 +1,59 @@
 import React, { useState, useEffect } from "react";
 import PasswordList from "./PasswordList";
 import "./AddTitlePassword.css";
-import React, { useState, useEffect } from "react";
-import PasswordList from "./PasswordList";
-import "./AddTitlePassword.css";
 
 const AddTitlePassword = ({ setTotalCount, searchQuery }) => {
-  const [entries, setEntries] = useState(() => {
-    try {
-      const stored = localStorage.getItem("passwords");
-      return stored ? JSON.parse(stored) : [];
-    } catch (error) {
-      console.error("Error loading from localStorage:", error);
-      return [];
-    }
-  });
+  const [entries, setEntries] = useState("[]");
   const [title, setTitle] = useState("");
   const [password, setPassword] = useState("");
   const [editIndex, setEditIndex] = useState(null);
+  const [warning, setWarning] = useState("");
 
   useEffect(() => {
-    localStorage.setItem("passwords", JSON.stringify(entries));
-    setTotalCount(entries.length);
+    const stored = localStorage.getItem("passwords");
+    if (stored) {
+      setEntries(stored);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("passwords", entries);
+    setTotalCount(JSON.parse(entries).length);
   }, [entries, setTotalCount]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    const currentEntries = JSON.parse(entries);
+    setWarning("");
+
+    const titleExists = currentEntries.some((entry, idx) =>
+      idx !== editIndex && entry.title.trim().toLowerCase() === title.trim().toLowerCase()
+    );
+    if (titleExists) {
+      setWarning("Title already exists. Please choose a different title.");
+      return;
+    }
     if (editIndex !== null) {
-      const updatedEntries = [...entries];
-      updatedEntries[editIndex] = { title, password };
-      setEntries(updatedEntries);
+      currentEntries[editIndex] = { title, password };
+      setEntries(JSON.stringify(currentEntries));
       setEditIndex(null);
     } else {
       const newEntry = { title, password };
-      setEntries((prev) => [...prev, newEntry]);
+      setEntries(JSON.stringify([...currentEntries, newEntry]));
     }
+
     setTitle("");
     setPassword("");
   };
 
-  // Filter entries based on the search query
-  const filteredEntries = entries.filter((entry) => {
+  const filteredEntries = JSON.parse(entries).filter((entry) => {
     return (
       entry.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       entry.password.toLowerCase().includes(searchQuery.toLowerCase())
     );
   });
 
-  // Update the count based on filtered entries
   useEffect(() => {
     setTotalCount(filteredEntries.length);
   }, [filteredEntries, setTotalCount]);
@@ -56,6 +61,7 @@ const AddTitlePassword = ({ setTotalCount, searchQuery }) => {
   return (
     <>
       <div className="field-group">
+      {warning && <div style={{ color: 'red', marginBottom: '10px', textAlign: 'center' }}>{warning}</div>}
         <form onSubmit={handleSubmit}>
           <label htmlFor="title">Title:</label>
           <input
